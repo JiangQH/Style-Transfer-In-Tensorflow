@@ -12,7 +12,7 @@ class Numeric(object):
         """
         (Fl, Pl) = (F[layer], F_content[layer])
         El = Fl - Pl
-        loss = sum(El ** 2) / 2
+        loss = (El ** 2).sum() / 2
         grad = El * (Fl > 0)
         return loss, grad
 
@@ -27,9 +27,9 @@ class Numeric(object):
         (Al, Gl) = (G_style[layer], G[layer])
         Fl = F[layer]
         temp = Gl - Al
-        constant = Al.shape[0]**-2 * Al.shape[1]**-2
-        loss = 0.25 * constant * sum(temp**2)
-        grad = constant * np.dot(Fl, temp) * (Fl > 0)
+        constant = Fl.shape[0]**-2 * Fl.shape[1]**-2
+        loss = 0.25 * constant * (temp**2).sum()
+        grad = constant * np.dot(temp, Fl) * (Fl > 0)
         return loss, grad
 
     def computeFandG(self, x, net, style_layers, content_layers):
@@ -49,16 +49,16 @@ class Numeric(object):
         G = {}
         all_layers = set(list(style_layers) + list(content_layers))
         for layer in all_layers:
-            act = net.blobs[layer].data[0, ...].copy()
-            act = np.reshape(act.shape[0], -1)
+            act = net.blobs[layer].data[0].copy()
+            act.shape = (act.shape[0], -1)
             F[layer] = act
             if layer in style_layers:
-                G[layer] = np.dot(act, act)
+                G[layer] = np.dot(act, act.T)
         return F, G
 
 
     def computeLossAndGradAll(self, x, net, layers, F_content, G_style,
-                              style_layers, content_layers, ratio=1e3):
+                              style_layers, content_layers, ratio=1e4):
         """
         :param x: the input to net
         :param net: the caffe.Net object
@@ -88,14 +88,14 @@ class Numeric(object):
                 weight = content_layers[layer]
                 (tmpl, tmpg) = self.compute_content_grad(F_content, F, layer)
                 loss += tmpl * weight
-                grad += tmpg * weight
+                grad += tmpg.reshape(grad.shape) * weight
 
             # the style part
             if layer in style_layers:
                 weight = style_layers[layer]
                 (tmpl, tmpg) = self.compute_style_grad(G_style, G, F, layer)
                 loss += tmpl * weight * ratio
-                grad += tmpg * weight * ratio
+                grad += tmpg.reshape(grad.shape) * weight * ratio
             # flow to next
             net.blobs[layer].diff[0,...] = grad
             net.backward(start=layer, end=next_layer)
