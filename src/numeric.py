@@ -58,7 +58,7 @@ class Numeric(object):
 
 
     def computeLossAndGradAll(self, x, net, layers, F_content, G_style,
-                              style_layers, content_layers, alpha, beta):
+                              style_layers, content_layers, ratio=1e3):
         """
         :param x: the input to net
         :param net: the caffe.Net object
@@ -87,15 +87,15 @@ class Numeric(object):
             if layer in content_layers:
                 weight = content_layers[layer]
                 (tmpl, tmpg) = self.compute_content_grad(F_content, F, layer)
-                loss += tmpl * weight * alpha
-                grad += tmpg * weight * alpha
+                loss += tmpl * weight
+                grad += tmpg * weight
 
             # the style part
             if layer in style_layers:
                 weight = style_layers[layer]
                 (tmpl, tmpg) = self.compute_style_grad(G_style, G, F, layer)
-                loss += tmpl * weight * beta
-                grad += tmpg * weight * beta
+                loss += tmpl * weight * ratio
+                grad += tmpg * weight * ratio
             # flow to next
             net.blobs[layer].diff[0,...] = grad
             net.backward(start=layer, end=next_layer)
