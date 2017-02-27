@@ -36,7 +36,3 @@ class StyleTransfer(object):
 		data = self.tool.net.blobs['data'].data[0,...]
 		self.tool.saveImg(data)
 
-	def saveImg(self):
-		# get output
-		self.tool.saveImg()
-
