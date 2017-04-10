@@ -1,4 +1,4 @@
-from constant import IMAGE_MEAN, IMAGE_SCALE, WEIGHT_INIT_STDEV
+from constant import IMAGE_MEAN, IMAGE_SCALE, WEIGHT_INIT_STDEV, IMAGE_HEIGHT, IMAGE_WIDTH
 import tensorflow as tf
 
 def preprocess(image):
@@ -7,6 +7,11 @@ def preprocess(image):
     :param image:
     :return:
     """
+    # resize it
+    image = tf.image.resize_images(image, (IMAGE_HEIGHT, IMAGE_WIDTH))
+    # cast to float
+    image = tf.cast(image, tf.float32)
+    # subtract the mean and scale
     num_channels = image.get_shape().as_list[-1]
     channels = tf.split(image, num_channels, 2)
     for i in range(num_channels):
