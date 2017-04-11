@@ -1,10 +1,10 @@
 import tensorflow as tf
 
-def _get_variable(name, shape, initializer):
-    var = tf.get_variable(name, shape, initializer=initializer)
+def _get_variable(name, shape, initializer, trainable):
+    var = tf.get_variable(name, shape, initializer=initializer, trainable=trainable)
     return var
 
-def _weights_with_weight_decay(name, shape, stddev, wd):
+def _weights_with_weight_decay(name, shape, stddev, wd, trainable):
     """
     get the weight decay here, so we can use the tf auto summary the weight decay for us
     :param name:
@@ -14,7 +14,7 @@ def _weights_with_weight_decay(name, shape, stddev, wd):
     :param trainable:
     :return:
     """
-    var = _get_variable(name, shape, tf.truncated_normal(stddev=stddev))
+    var = _get_variable(name, shape, tf.truncated_normal(stddev=stddev), trainable=trainable)
     if wd:
         weight_decay = tf.multiply(tf.nn.l2_loss(var), wd, name='weight_loss')
         tf.add_to_collection('losses', weight_decay)
@@ -38,13 +38,13 @@ def _get_weights_shape(bottom, num_output, kernel_size, transpose=False):
 
     return weight_shape
 
-def _instance_norm(scope_name, bottom, reuse):
+def _instance_norm(scope_name, bottom, reuse, trainable=True):
     with tf.variable_scope(scope_name) as scope:
         if reuse:
             scope.reuse_variables()
         _, _, _, channels = bottom.get_shape().as_list()
-        shift = _get_variable('shift', [channels], tf.constant_initializer(0.0))
-        scale = _get_variable('scale', [channels], tf.constant_initializer(0.0))
+        shift = _get_variable('shift', [channels], tf.constant_initializer(0.0), trainable=trainable)
+        scale = _get_variable('scale', [channels], tf.constant_initializer(0.0), trainable=trainable)
         epsilon = 1e-6
         mean, var = tf.nn.moments(bottom, [1, 2], keep_dims=True)
         normalized = tf.divide(tf.subtract(bottom, mean), tf.sqrt(tf.add(var, epsilon)))
@@ -52,7 +52,7 @@ def _instance_norm(scope_name, bottom, reuse):
 
 
 def _conv2d(scope_name, bottom, kernel_size, num_output, stride, relu=True,
-           wd=0.0, reuse=False, bias_term=False):
+           wd=0.0, reuse=False, bias_term=False, trainable=True):
     with tf.variable_scope(scope_name) as scope:
         if reuse:
             scope.reuse_variables()
@@ -61,28 +61,28 @@ def _conv2d(scope_name, bottom, kernel_size, num_output, stride, relu=True,
         kernel = _weights_with_weight_decay('weights',
                                              shape=weight_shape,
                                              stddev=0.01,
-                                             wd=wd)
+                                             wd=wd, trainable=trainable)
         # get the conv out
         conv = tf.nn.conv2d(bottom, kernel, stride, padding='SAME')
         # if we need the biases
         if bias_term:
             # get the bias term
             bias_shape = [num_output]
-            biases = _get_variable('biases', bias_shape, tf.constant_initializer(0.1))
+            biases = _get_variable('biases', bias_shape, tf.constant_initializer(0.1), trainable=trainable)
             conv = tf.nn.bias_add(conv, biases)
 
         # if we need the relu layer
         if relu:
             conv = tf.nn.relu(conv, name=scope.name)
-
         return conv
 
-def _deconv_unit(scope_name, bottom, kernel_size, num_output, stride, wd=0.0, reuse=False):
+def _deconv_unit(scope_name, bottom, kernel_size, num_output, stride, wd=0.0, reuse=False,
+                 trainable=True):
     with tf.variable_scope(scope_name) as scope:
         if reuse:
             scope.reuse_variables()
         weight_shape = _get_weights_shape(bottom, num_output, kernel_size, transpose=True)
-        kernel = _weights_with_weight_decay('weights', weight_shape, stddev=0.01, wd=wd)
+        kernel = _weights_with_weight_decay('weights', weight_shape, stddev=0.01, wd=wd, trainable=trainable)
 
         nums, height, width, channels = bottom.get_shape().as_list()
         new_height, new_width = int(height * stride), int(width * stride)
@@ -98,11 +98,11 @@ def _deconv_unit(scope_name, bottom, kernel_size, num_output, stride, wd=0.0, re
 
 
 def _conv_unit(scope_name, bottom, kernle_size, num_ouput, stride, relu=True,
-              reuse=False):
+              reuse=False, trainable=True):
     with tf.variable_scope(scope_name) as scope:
         # a first conv layer
         conv = _conv2d(scope.name, bottom, kernle_size, num_ouput, stride, reuse=reuse,
-                      )
+                      trainable=trainable)
         # norm it
         conv = _instance_norm('instance_norm', conv, reuse=reuse)
         if relu:
@@ -112,13 +112,13 @@ def _conv_unit(scope_name, bottom, kernle_size, num_ouput, stride, relu=True,
 
 
 
-def _residual_block(scope_name, bottom, kernel_size=3, num_ouput=128, stride=1, reuse=False):
+def _residual_block(scope_name, bottom, kernel_size=3, num_ouput=128, stride=1, reuse=False, trainable=True):
     with tf.variable_scope(scope_name) as scope:
         # a first conv unit with relu
         conv1 = _conv_unit('conv_unit1', bottom, kernel_size, num_ouput, stride, relu=True,
-                          reuse=reuse)
+                          reuse=reuse, trainable=trainable)
         # a second conv unit without relu
-        conv2 = _conv_unit('conv_unit2', conv1, kernel_size, num_ouput, stride, relu=False, reuse=reuse)
+        conv2 = _conv_unit('conv_unit2', conv1, kernel_size, num_ouput, stride, relu=False, reuse=reuse, trainable=trainable)
         return conv1 + conv2
 
 
@@ -126,6 +126,9 @@ def _remap_unit(scope_name, bottom):
     with tf.variable_scope(scope_name) as scope:
         out = tf.nn.tanh(bottom, name=scope.name)
         return tf.multiply(tf.add(out, 1), 127.5)
+
+
+
 
 
 def inference_trainnet(images):
@@ -149,6 +152,8 @@ def inference_trainnet(images):
     out = _conv_unit('out', bottom=deconv2, kernle_size=9, num_ouput=3, stride=1, relu=False)
     generated = _remap_unit('remap', out)
     return generated
+
+
 
 
 
