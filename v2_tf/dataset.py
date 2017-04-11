@@ -12,7 +12,7 @@ class Dataset(object):
         self.height = height
 
 
-    def input_pipelines(self, img_dirs):
+    def imagedata_pipelines(self, img_dirs):
         # prepare the file lists tensor and generate the filename_queue
         filenames = [osp.join(img_dirs, f) for f in os.listdir(img_dirs) if osp.isfile(f)]
         filename_queue = tf.train.string_input_producer(filenames)
