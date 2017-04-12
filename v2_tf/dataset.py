@@ -4,12 +4,13 @@ import tensorflow as tf
 from util import preprocess
 
 class Dataset(object):
-    def __init__(self, batch_size, Config):
-        self.batch_size = batch_size
+    def __init__(self, Config):
+        self.batch_size = Config.batch_size
         self.config = Config
 
-    def imagedata_pipelines(self, img_dirs):
+    def imagedata_pipelines(self):
         # prepare the file lists tensor and generate the filename_queue
+        img_dirs = self.config.data_dir
         filenames = [osp.join(img_dirs, f) for f in os.listdir(img_dirs) if osp.isfile(f)]
         filename_queue = tf.train.string_input_producer(filenames)
         # get the data
