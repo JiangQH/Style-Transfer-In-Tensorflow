@@ -1,6 +1,7 @@
 import tensorflow as tf
 from vgg import Vgg
 from util import preprocess
+
 def gram(layer):
     """
     note the num here is one
@@ -45,8 +46,51 @@ def get_style_feature(Config):
         return sess.run(style_features)
 
 
+def content_loss(layer_infos, content_layers):
+    """
+    compute the content loss
+    :param layer_infos:
+    :param content_layers:
+    :return:
+    """
+    loss = 0
+    for layer in content_layers:
+        generated, ori = tf.split(value=layer_infos[layer], num_split=2, split_dim=0)
+        size = tf.size(generated)
+        loss += tf.nn.l2_loss(generated - ori) * 2 / tf.to_float(size)
+    return loss
+
+def style_loss(layer_infos, style_layers, style_features):
+    """
+    compute the style loss
+    :param layer_infos:
+    :param style_layers:
+    :param style_feature:
+    :return:
+    """
+    loss = 0
+    for style_feature, layer in zip(style_features, style_layers):
+        generated, _ = tf.split(value=layer_infos[layer], num_split=2, split_dim=0)
+        size = tf.size(generated)
+        loss += tf.nn.l2_loss(gram(generated) - style_feature) * 2 / tf.to_float(size)
+    return loss
 
 
+def tv_loss(bottom):
+    """
+    the tv loss
+    :param bottom:
+    :return:
+    """
+    _, height, width, _ = bottom.get_shape().as_list()
+    y = tf.slice(bottom, [0, 0, 0, 0], tf.stack([-1, height - 1, -1, -1])) - tf.slice(bottom, [0, 1, 0, 0],
+                                                                                     [-1, -1, -1, -1])
+    x = tf.slice(bottom, [0, 0, 0, 0], tf.stack([-1, -1, width - 1, -1])) - tf.slice(bottom, [0, 0, 1, 0],
+                                                                                    [-1, -1, -1, -1])
+
+    loss = tf.nn.l2_loss(x) / tf.to_float(tf.size(x)) + tf.nn.l2_loss(y) / tf.to_float(tf.size(y))
+
+    return loss
 
 
 
