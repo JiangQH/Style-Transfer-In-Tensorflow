@@ -33,8 +33,8 @@ class Vgg(object):
         :return:
         """
         # convert image from RGB to BGR
-        red, green, blue = tf.split(split_dim=3, num_split=3, value=images)
-        bgr = tf.concat(concat_dim=3, values=[blue, green, red])
+        red, green, blue = tf.split(axis=3, num_or_size_splits=3, value=images)
+        bgr = tf.concat(axis=3, values=[blue, green, red])
 
         # now do the net
         conv1_1 = self.conv_layer(bgr, 'conv1_1')
