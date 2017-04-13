@@ -15,7 +15,7 @@ def solve(Config):
     # get the style feature
     style_features = losses.get_style_feature(Config)
     # prepare some dirs for use
-    model_dir = 'model'
+    model_dir = Config.model_dir
     if not osp.exists(model_dir):
         os.mkdir(model_dir)
 
@@ -28,7 +28,7 @@ def solve(Config):
         # concat the content image and the generated together to save time and feed to the vgg net one time
         # preprocess the generated
         preprocess_generated = preprocess(generated, Config)
-        layer_infos = Vgg(Config.model_path).build(tf.concat([preprocess_generated, images], 0))
+        layer_infos = Vgg(Config.feature_path).build(tf.concat([preprocess_generated, images], 0))
         # get the loss
         content_loss = losses.content_loss(layer_infos, Config.content_layers)
         style_loss = losses.style_loss(layer_infos, Config.style_layers, style_features)
@@ -90,12 +90,12 @@ def solve(Config):
         print 'done'
 
 
-def main(argv=None):
+def main(args):
     print 'begin training'
     paser = argparse.ArgumentParser()
     paser.add_argument('-c', '--conf', help='path to the config file')
     args = paser.parse_args()
-    Config = load_config(args)
+    Config = load_config(args.conf)
     solve(Config)
 
 

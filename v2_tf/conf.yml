@@ -1,0 +1,30 @@
+## config for the style and content image
+style_image: style/candy.jpg # the style image
+data_dir: ../content # the content image folders
+model_dir: models 
+feature_path: vgg/vgg16.npy
+
+## Loss Network
+content_layers:
+  - "conv2_2"
+style_layers:
+  - "conv1_2"
+  - "conv2_2"
+  - "conv3_3"
+  - "conv4_3"
+style_weight: 50.0
+content_weight: 1.0
+tv_weight: 1e-5
+
+
+## learning params
+image_size: 256
+batch_size: 4
+mean: [123.68, 116.779, 103.939]
+lr: 1e-3
+max_iter: 40000
+display: 10
+snapshot: 10000
+
+
+

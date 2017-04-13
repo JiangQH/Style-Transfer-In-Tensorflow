@@ -14,7 +14,7 @@ def _weights_with_weight_decay(name, shape, stddev, wd, trainable):
     :param trainable:
     :return:
     """
-    var = _get_variable(name, shape, tf.truncated_normal(stddev=stddev), trainable=trainable)
+    var = _get_variable(name, shape, tf.truncated_normal_initializer(stddev=stddev), trainable=trainable)
     if wd:
         weight_decay = tf.multiply(tf.nn.l2_loss(var), wd, name='weight_loss')
         tf.add_to_collection('losses', weight_decay)
@@ -63,7 +63,7 @@ def _conv2d(scope_name, bottom, kernel_size, num_output, stride, relu=True,
                                              stddev=0.01,
                                              wd=wd, trainable=trainable)
         # get the conv out
-        conv = tf.nn.conv2d(bottom, kernel, stride, padding='SAME')
+        conv = tf.nn.conv2d(bottom, kernel, [1, stride, stride, 1], padding='SAME')
         # if we need the biases
         if bias_term:
             # get the bias term

@@ -4,7 +4,7 @@ class Vgg(object):
 
     def __init__(self, model_path):
         # load the numpy weights
-        self.data_dict = np.load(model_path, encoding='latin1').items()
+        self.data_dict = np.load(model_path, encoding='latin1').item()
 
 
     def get_conv_filter(self, name):

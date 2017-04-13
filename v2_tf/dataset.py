@@ -11,12 +11,12 @@ class Dataset(object):
     def imagedata_pipelines(self):
         # prepare the file lists tensor and generate the filename_queue
         img_dirs = self.config.data_dir
-        filenames = [osp.join(img_dirs, f) for f in os.listdir(img_dirs) if osp.isfile(f)]
+        filenames = [osp.join(img_dirs, f) for f in os.listdir(img_dirs) if osp.isfile(osp.join(img_dirs, f))]
         filename_queue = tf.train.string_input_producer(filenames)
         # get the data
         data = self._file_reader(filename_queue)
         # generate the batch queue
-        images = tf.train.batch(data,
+        images = tf.train.batch([data],
                                 batch_size=self.batch_size)
         return images
 

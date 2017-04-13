@@ -25,14 +25,16 @@ def get_style_feature(Config):
         # get the image tensor
         img_bytes = tf.read_file(Config.style_image)
         if Config.style_image.lower().endswith('png'):
-            image = tf.image.decode_png(img_bytes)
+            image = tf.image.decode_png(img_bytes, channels=3)
         else:
-            image = tf.image.decode_jpeg(img_bytes)
+            image = tf.image.decode_jpeg(img_bytes, channels=3)
         # preprocess the image tensor
         image = preprocess(image, Config)
 
         # init the style and get the layer_info
-        style_net = Vgg(Config.model_path)
+        shape = [1] + image.get_shape().as_list()
+        image = tf.reshape(image, shape)
+        style_net = Vgg(Config.feature_path)
         layer_infos = style_net.build(image)
         # get the feature we need
         style_features = []
@@ -55,7 +57,7 @@ def content_loss(layer_infos, content_layers):
     """
     loss = 0
     for layer in content_layers:
-        generated, ori = tf.split(value=layer_infos[layer], num_split=2, split_dim=0)
+        generated, ori = tf.split(value=layer_infos[layer], num_or_size_splits=2, axis=0)
         size = tf.size(generated)
         loss += tf.nn.l2_loss(generated - ori) * 2 / tf.to_float(size)
     return loss
@@ -70,7 +72,7 @@ def style_loss(layer_infos, style_layers, style_features):
     """
     loss = 0
     for style_feature, layer in zip(style_features, style_layers):
-        generated, _ = tf.split(value=layer_infos[layer], num_split=2, split_dim=0)
+        generated, _ = tf.split(value=layer_infos[layer], num_or_size_splits=2, axis=0)
         size = tf.size(generated)
         loss += tf.nn.l2_loss(gram(generated) - style_feature) * 2 / tf.to_float(size)
     return loss
