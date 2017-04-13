@@ -14,14 +14,14 @@ style_layers:
   - "conv4_3"
 style_weight: 50.0
 content_weight: 1.0
-tv_weight: 1e-5
+tv_weight: 0.00001
 
 
 ## learning params
 image_size: 256
 batch_size: 4
 mean: [123.68, 116.779, 103.939]
-lr: 1e-3
+lr: 0.001
 max_iter: 40000
 display: 10
 snapshot: 10000
