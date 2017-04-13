@@ -5,11 +5,13 @@ import losses
 import model
 from dataset import Dataset
 from vgg import Vgg
-from util import preprocess
-import time
+from util import preprocess, load_config
+import numpy as np
+from PIL import Image
+import argparse
 
 
-def main(Config):
+def solve(Config):
     # get the style feature
     style_features = losses.get_style_feature(Config)
     # prepare some dirs for use
@@ -61,26 +63,41 @@ def main(Config):
         sess.run(init_op)
         saver = tf.train.Saver(tf.trainable_variables())
         coord = tf.train.Coordinator()
-        threads = tf.train.start_queue_runners(coord=coord)
-        start_time = time.time()
-        try:
-            while not coord.should_stop():
-                _, loss, step = sess.run([train_op, total_loss, global_step])
-                if step % Config.disply == 0:
-                    eps = time.time() - start_time
-                    start_time = time.time()
-                    print 'time consumes {}, step: {}, total_loss {}'.format(eps, step, loss)
-                if step % Config.summary == 0:
-                    print 'adding summary...'
-                    summary_str = sess.run(summary)
-                    writer.add_summary(summary_str)
-                    writer.flush()
-                if step % Config.snapshot == 0:
-                    saver.save(sess, osp.join(model_dir, 'model.ckpt'), global_step=step)
-        except tf.errors.OutOfRangeError:
-            saver.save(sess, osp.join(model_dir, 'model.ckpt'))
-            print 'epoch limit arrived'
-        finally:
-            coord.request_stop()
-        coord.join(threads)
+        threads = tf.train.start_queue_runners(sess=sess, coord=coord)
+        for step in xrange(Config.max_iter):
+            _, loss_value, style_loss_value, content_loss_value, gen = sess.run([train_op, loss,
+                                                                            Config.style_weight * style_loss,
+                                                                            Config.content_weight * content_loss,
+                                                                            generated])
+            if step % Config.display == 0:
+                print "{}[iterations], train loss {}".format(step, loss_value)
+                assert not np.isnan(loss_value), 'model with loss nan'
+            if step % Config.snapshot == 0:
+                # save the generated to see
+                print 'adding summary and saving snapshot...'
+                im = Image.fromarray(np.uint8(gen))
+                save_name = osp.join(model_dir, str(step)+'.png')
+                im.save(save_name)
+                saver.save(sess, osp.join(model_dir, 'model.ckpt'), global_step=step)
+                summary_str = sess.run(summary)
+                writer.add_summary(summary_str, global_step=step)
+                writer.flush()
 
+        coord.request_stop()
+        coord.join(threads)
+        sess.close()
+
+        print 'done'
+
+
+def main(argv=None):
+    print 'begin training'
+    paser = argparse.ArgumentParser()
+    paser.add_argument('-c', '--conf', help='path to the config file')
+    args = paser.parse_args()
+    Config = load_config(args)
+    solve(Config)
+
+
+if __name__ == '__main__':
+    tf.app.run()

@@ -1,5 +1,5 @@
 import tensorflow as tf
-
+import yaml
 
 def preprocess(image_tensor, Config):
     # first resize and cast to float32
@@ -13,3 +13,14 @@ def preprocess(image_tensor, Config):
     for i in range(channels):
         channel_val[i] -= Config.mean[i]
     return tf.concat(channel_val, 2)
+
+
+
+class Config(object):
+    def __init__(self, **entries):
+        self.__dict__.update(entries)
+
+def load_config(conf_file):
+    with open(conf_file) as f:
+        config = Config(**yaml.load(f))
+    return config
