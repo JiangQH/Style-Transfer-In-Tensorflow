@@ -70,10 +70,10 @@ def style_loss(layer_infos, style_layers, style_features):
     :return:
     """
     loss = 0
-    for style_feature, layer in zip(style_features, style_layers):
+    for style_gram, layer in zip(style_features, style_layers):
         generated, _ = tf.split(value=layer_infos[layer], num_or_size_splits=2, axis=0)
         size = tf.size(generated)
-        loss += tf.nn.l2_loss(gram(generated) - style_feature) * 2 / tf.to_float(size)
+        loss += tf.nn.l2_loss(gram(generated) - style_gram) / tf.to_float(size)
     return loss
 
 

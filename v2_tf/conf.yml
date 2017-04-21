@@ -1,8 +1,8 @@
 ## config for the style and content image
-style_image: style/candy.jpg # the style image
+style_image: ../style/candy.jpg # the style image
 data_dir: ../content # the content image folders
-model_dir: models 
-feature_path: vgg/vgg16.npy
+model_dir: ../models
+feature_path: ../vgg/vgg16.npy
 
 ## Loss Network
 content_layers:
@@ -21,7 +21,7 @@ tv_weight: 0.00001
 image_size: 256
 batch_size: 1
 mean: [123.68, 116.779, 103.939]
-lr: 0.001
+lr: 0.01
 max_iter: 40000
 display: 1
 snapshot: 10000

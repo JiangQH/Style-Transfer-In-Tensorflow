@@ -4,20 +4,15 @@ def _get_variable(name, shape, initializer, trainable):
     var = tf.get_variable(name, shape=shape, initializer=initializer, trainable=trainable)
     return var
 
-def _weights_with_weight_decay(name, shape, stddev, wd, trainable):
+def _weights_with_weight_decay(name, shape, stddev, trainable):
     """
-    get the weight decay here, so we can use the tf auto summary the weight decay for us
     :param name:
     :param shape:
     :param stddev:
-    :param wd:
     :param trainable:
     :return:
     """
     var = _get_variable(name, shape, tf.truncated_normal_initializer(stddev=stddev), trainable=trainable)
-    if wd:
-        weight_decay = tf.multiply(tf.nn.l2_loss(var), wd, name='weight_loss')
-        tf.add_to_collection('losses', weight_decay)
     return var
 
 
@@ -35,7 +30,7 @@ def _instance_norm(scope_name, inputs, reuse, trainable=True):
 
 
 def _conv2d(scope_name, inputs, input_channels, output_channels, kernel, stride,
-           wd=0.0, reuse=False, bias_term=False, trainable=True):
+           reuse=False, bias_term=False, trainable=True):
     with tf.variable_scope(scope_name) as scope:
         if reuse:
             scope.reuse_variables()
@@ -44,7 +39,7 @@ def _conv2d(scope_name, inputs, input_channels, output_channels, kernel, stride,
         kernel = _weights_with_weight_decay('weights',
                                              shape=weight_shape,
                                              stddev=0.01,
-                                             wd=wd, trainable=trainable)
+                                            trainable=trainable)
         # get the conv out
         conv = tf.nn.conv2d(inputs, kernel, [1, stride, stride, 1], padding='SAME')
         # if we need the biases
@@ -56,13 +51,13 @@ def _conv2d(scope_name, inputs, input_channels, output_channels, kernel, stride,
         return conv
 
 
-def _deconv_unit(scope_name, inputs, input_channels, output_channels, kernel, stride, wd=0.0, reuse=False,
+def _deconv_unit(scope_name, inputs, input_channels, output_channels, kernel, stride, reuse=False,
                  trainable=True):
     with tf.variable_scope(scope_name) as scope:
         if reuse:
             scope.reuse_variables()
         weight_shape = [kernel, kernel, output_channels, input_channels]
-        kernel = _weights_with_weight_decay('weights', weight_shape, stddev=0.01, wd=wd, trainable=trainable)
+        kernel = _weights_with_weight_decay('weights', weight_shape, stddev=0.01, trainable=trainable)
         batches, height, width, channels = inputs.get_shape().as_list()
         out_shape = tf.stack([batches, height*stride, width*stride, output_channels])
         strides = [1, stride, stride, 1]
