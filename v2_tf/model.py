@@ -25,7 +25,7 @@ def _instance_norm(scope_name, inputs, reuse, trainable=True):
     with tf.variable_scope(scope_name) as scope:
         if reuse:
             scope.reuse_variables()
-        channels = tf.shape(inputs)[3]
+        channels = inputs.get_shape().as_list()[3]
         shift = _get_variable('shift', [channels], tf.constant_initializer(0.0), trainable=trainable)
         scale = _get_variable('scale', [channels], tf.constant_initializer(0.0), trainable=trainable)
         epsilon = 1e-6
@@ -63,10 +63,7 @@ def _deconv_unit(scope_name, inputs, input_channels, output_channels, kernel, st
             scope.reuse_variables()
         weight_shape = [kernel, kernel, output_channels, input_channels]
         kernel = _weights_with_weight_decay('weights', weight_shape, stddev=0.01, wd=wd, trainable=trainable)
-
-        batches = tf.shape(inputs)[0]
-        height = tf.shape(inputs)[1]
-        width = tf.shape(inputs)[2]
+        batches, height, width, channels = inputs.get_shape().as_list()
         out_shape = tf.stack([batches, height*stride, width*stride, output_channels])
         strides = [1, stride, stride, 1]
         conv = tf.nn.conv2d_transpose(inputs, kernel, out_shape, strides, padding='SAME')

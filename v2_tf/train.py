@@ -9,6 +9,7 @@ from util import preprocess, load_config
 import numpy as np
 from PIL import Image
 import argparse
+import time
 
 
 def solve(Config):
@@ -36,58 +37,72 @@ def solve(Config):
         loss = Config.style_weight * style_loss + Config.content_weight * content_loss + Config.tv_weight * tv_loss
         tf.add_to_collection('losses', loss)
         total_loss = tf.add_n(tf.get_collection('losses'), name='total_loss')
-
-        # add summary
-        tf.summary.scalar('content_loss', content_loss)
-        tf.summary.scalar('style_loss', style_loss)
-        tf.summary.scalar('tv_loss', tv_loss)
-        tf.summary.scalar('weighted_content_loss', content_loss * Config.content_weight)
-        tf.summary.scalar('weighted_style_loss', style_loss * Config.style_weight)
-        tf.summary.scalar('weighted_tv_loss', tv_loss * Config.tv_weight)
-        tf.summary.scalar('total_loss', total_loss)
-        tf.summary.image('generated', generated)
-        summary = tf.summary.merge_all()
-        writer = tf.summary.FileWriter(model_dir)
-
-
-        # variable init
-        init_op = tf.global_variables_initializer()
-
         # train op
         global_step = tf.Variable(0, name='global_step', trainable=False)
         train_op = tf.train.AdamOptimizer(Config.lr).minimize(total_loss, global_step=global_step)
-        # no restore during train
 
-        # begin the training work
-        sess = tf.Session()
-        sess.run(init_op)
-        saver = tf.train.Saver(tf.trainable_variables())
-        coord = tf.train.Coordinator()
-        threads = tf.train.start_queue_runners(sess=sess, coord=coord)
-        for step in xrange(Config.max_iter):
-            _, loss_value, style_loss_value, content_loss_value, gen = sess.run([train_op, loss,
+        # add summary
+        with tf.name_scope('losses'):
+            tf.summary.scalar('content_loss', content_loss)
+            tf.summary.scalar('style_loss', style_loss)
+            tf.summary.scalar('tv_loss', tv_loss)
+        with tf.name_scope('weighted_losses'):
+            tf.summary.scalar('weighted_content_loss', content_loss * Config.content_weight)
+            tf.summary.scalar('weighted_style_loss', style_loss * Config.style_weight)
+            tf.summary.scalar('weighted_tv_loss', tv_loss * Config.tv_weight)
+            tf.summary.scalar('total_loss', total_loss)
+        tf.summary.image('generated', generated)
+        tf.summary.image('original', images)
+        summary = tf.summary.merge_all()
+        summary_path = osp.join(model_dir, 'summary')
+        if not osp.exists(summary_path):
+            os.mkdir(summary_path)
+        writer = tf.summary.FileWriter(summary_path)
+
+        # the saver loader
+        saver = tf.train.Saver(tf.all_variables())
+        restore = tf.train.latest_checkpoint(model_dir)
+
+
+        # begin training work
+        with tf.Session() as sess:
+            # restore the variables
+            sess.run([tf.global_variables_initializer(), tf.local_variables_initializer()])
+            # if we need finetune?
+            if Config.finetune:
+                if restore:
+                    print 'restoring model from {}'.format(restore)
+                    saver.restore(sess, restore)
+                else:
+                    print 'no model exist, from scratch'
+
+            # pop the data queue
+            coord = tf.train.Coordinator()
+            threads = tf.train.start_queue_runners(sess=sess, coord=coord)
+            for step in xrange(Config.max_iter):
+                _, loss_value, style_loss_value, content_loss_value, gen = sess.run([train_op, loss,
                                                                             Config.style_weight * style_loss,
                                                                             Config.content_weight * content_loss,
                                                                             generated])
-            if step % Config.display == 0:
-                print "{}[iterations], train loss {}".format(step, loss_value)
-                assert not np.isnan(loss_value), 'model with loss nan'
-            if step % Config.snapshot == 0:
-                # save the generated to see
-                print 'adding summary and saving snapshot...'
-                im = Image.fromarray(np.uint8(gen))
-                save_name = osp.join(model_dir, str(step)+'.png')
-                im.save(save_name)
-                saver.save(sess, osp.join(model_dir, 'model.ckpt'), global_step=step)
-                summary_str = sess.run(summary)
-                writer.add_summary(summary_str, global_step=step)
-                writer.flush()
+                if step % Config.display == 0:
+                    print "{}[iterations], content_loss {}, style_loss {}, train loss {}".format(step,
+                                                                                                 content_loss_value,
+                                                                                                 style_loss_value,
+                                                                                                 loss_value)
+                    assert not np.isnan(loss_value), 'model with loss nan'
+                if step % Config.snapshot == 0:
+                    # save the generated to see
+                    print 'adding summary and saving snapshot...'
+                    saver.save(sess, osp.join(model_dir, 'model.ckpt'), global_step=step)
+                    summary_str = sess.run(summary)
+                    writer.add_summary(summary_str, global_step=step)
+                    writer.flush()
 
-        coord.request_stop()
-        coord.join(threads)
-        sess.close()
+            coord.request_stop()
+            coord.join(threads)
+            sess.close()
 
-        print 'done'
+            print 'done'
 
 
 def main(args):
