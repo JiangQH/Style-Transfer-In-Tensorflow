@@ -20,31 +20,33 @@ def get_style_feature(Config):
     :param Config: Config contains all the info we may need
     :return: the style feature
     """
-    with tf.Graph().as_default():
         # get the image tensor
-        img_bytes = tf.read_file(Config.style_image)
-        if Config.style_image.lower().endswith('png'):
-            image = tf.image.decode_png(img_bytes, channels=3)
-        else:
-            image = tf.image.decode_jpeg(img_bytes, channels=3)
+    with tf.Graph().as_default() as g:
+    	img_bytes = tf.read_file(Config.style_image)
+    	if Config.style_image.lower().endswith('png'):
+		image = tf.image.decode_png(img_bytes, channels=3)
+    	else:
+        	image = tf.image.decode_jpeg(img_bytes, channels=3)
         # preprocess the image tensor
-        image = preprocess(image, Config)
+    	image = preprocess(image, Config)
 
         # init the style and get the layer_info
-        shape = [1] + image.get_shape().as_list()
-        image = tf.reshape(image, shape)
-        style_net = Vgg(Config.feature_path)
-        layer_infos = style_net.build(image)
+    	shape = [1] + image.get_shape().as_list()
+    	image = tf.reshape(image, shape)
+    	style_net = Vgg(Config.feature_path)
+    	layer_infos = style_net.build(image)
         # get the feature we need
-        style_features = {}
-        for layer in Config.style_layers:
-            feature = layer_infos[layer]
-            gram_ = tf.squeeze(gram(feature), [0])
-            style_features[layer] = gram_
+    	style_features = {}
+    	for layer in Config.style_layers:
+		feature = layer_infos[layer]
+         	gram_ = tf.squeeze(gram(feature), [0])
+         	style_features[layer] = gram_
 
         # get the feature with run
-        sess = tf.Session()
-        return sess.run(style_features)
+ 	config = tf.ConfigProto()
+	config.gpu_options.allow_growth = True	
+	with tf.Session(config=config) as sess:
+    		return sess.run(style_features)
 
 
 def content_loss(layer_infos, content_layers):
