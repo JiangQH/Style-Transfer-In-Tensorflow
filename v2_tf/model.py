@@ -1,7 +1,7 @@
 import tensorflow as tf
 
 def _get_variable(name, shape, initializer, trainable):
-    var = tf.get_variable(name, shape=shape, initializer=initializer, trainable=trainable)
+    var = tf.get_variable(name, shape=shape, initializer=initializer, trainable=trainable, dtype=tf.float32)
     return var
 
 def _weights_with_weight_decay(name, shape, stddev, trainable):
@@ -22,11 +22,11 @@ def _instance_norm(scope_name, inputs, reuse, trainable=True):
             scope.reuse_variables()
         channels = inputs.get_shape().as_list()[3]
         shift = _get_variable('shift', [channels], tf.constant_initializer(0.0), trainable=trainable)
-        scale = _get_variable('scale', [channels], tf.constant_initializer(0.0), trainable=trainable)
-        epsilon = 1e-6
+        scale = _get_variable('scale', [channels], tf.constant_initializer(1.0), trainable=trainable)
+        epsilon = 1e-3
         mean, var = tf.nn.moments(inputs, [1, 2], keep_dims=True)
-        normalized = tf.divide(tf.subtract(inputs, mean), tf.sqrt(tf.add(var, epsilon)))
-        return tf.add(tf.multiply(normalized, scale), shift)
+        normalized = (inputs - mean) / (var + epsilon) ** (.5)
+        return scale * normalized + shift
 
 
 def _conv2d(scope_name, inputs, input_channels, output_channels, kernel, stride,
@@ -39,7 +39,7 @@ def _conv2d(scope_name, inputs, input_channels, output_channels, kernel, stride,
         kernel = _weights_with_weight_decay('weights',
                                              shape=weight_shape,
                                              stddev=0.01,
-                                            trainable=trainable)
+                                             trainable=trainable)
         # get the conv out
         conv = tf.nn.conv2d(inputs, kernel, [1, stride, stride, 1], padding='SAME')
         # if we need the biases

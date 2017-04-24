@@ -10,8 +10,8 @@ def gram(layer):
     """
     num, height, width, channels = layer.get_shape().as_list()
     filters = tf.reshape(layer, tf.stack([num, -1, channels]))
-    gram = tf.matmul(filters, filters, transpose_a=True) / tf.cast(height * width * channels, tf.float32)
-    return gram
+    gram_ = tf.matmul(filters, filters, transpose_a=True) / tf.to_float(height * width * channels)
+    return gram_
 
 
 def get_style_feature(Config):
@@ -36,11 +36,11 @@ def get_style_feature(Config):
         style_net = Vgg(Config.feature_path)
         layer_infos = style_net.build(image)
         # get the feature we need
-        style_features = []
+        style_features = {}
         for layer in Config.style_layers:
             feature = layer_infos[layer]
-            feature = tf.squeeze(gram(feature), [0])
-            style_features.append(feature)
+            gram_ = tf.squeeze(gram(feature), [0])
+            style_features[layer] = gram_
 
         # get the feature with run
         sess = tf.Session()
@@ -70,8 +70,9 @@ def style_loss(layer_infos, style_layers, style_features):
     :return:
     """
     loss = 0
-    for style_gram, layer in zip(style_features, style_layers):
+    for layer in style_layers:
         generated, _ = tf.split(value=layer_infos[layer], num_or_size_splits=2, axis=0)
+        style_gram = style_features[layer]
         size = tf.size(generated)
         loss += tf.nn.l2_loss(gram(generated) - style_gram) / tf.to_float(size)
     return loss

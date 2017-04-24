@@ -20,6 +20,7 @@ def solve(Config):
             os.mkdir(model_dir)
 
         # construct the graph and model
+        tf.reset_default_graph()
         with tf.Graph().as_default():
             # prepare the dataset
             images = Dataset(Config).imagedata_pipelines()
@@ -82,10 +83,10 @@ def solve(Config):
                 threads = tf.train.start_queue_runners(sess=sess, coord=coord)
                 for step in xrange(Config.max_iter):
                     _, loss_value, style_loss_value, content_loss_value, gen = sess.run([train_op, loss,
-                                                                            Config.style_weight * style_loss,
-                                                                            Config.content_weight * content_loss,
-                                                                            images])
-                    plt.imshow(np.uint8(gen[0,...]))
+                                                                             Config.style_weight * style_loss,
+                                                                             Config.content_weight * content_loss,
+                                                                             generated])
+                    #plt.imshow(np.uint8(gen[0,...]))
                     if step % Config.display == 0:
                         print "{}[iterations], content_loss {}, style_loss {}, train loss {}".format(step,
                                                                                                  content_loss_value,
