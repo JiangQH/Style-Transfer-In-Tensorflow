@@ -15,7 +15,7 @@ def solve(Config):
         # get the style feature
         style_features = losses.get_style_feature(Config)
         # prepare some dirs for use
-	tf.reset_default_graph()
+        # tf.reset_default_graph()
         model_dir = Config.model_dir
         if not osp.exists(model_dir):
             os.mkdir(model_dir)
@@ -37,7 +37,7 @@ def solve(Config):
         loss = Config.style_weight * style_loss + Config.content_weight * content_loss + Config.tv_weight * tv_loss
         tf.add_to_collection('losses', loss)
         total_loss = tf.add_n(tf.get_collection('losses'), name='total_loss')
-            		# train op
+        # train op
         global_step = tf.Variable(0, name='global_step', trainable=False)
         train_op = tf.train.AdamOptimizer(Config.lr).minimize(total_loss, global_step=global_step)
 
@@ -65,8 +65,8 @@ def solve(Config):
 
 
         # begin training work
- 	config = tf.ConfigProto()
-	config.gpu_options.allow_growth = True	
+        config = tf.ConfigProto()
+        config.gpu_options.allow_growth = True
         with tf.Session(config=config) as sess:
                  # restore the variables
             sess.run([tf.global_variables_initializer(), tf.local_variables_initializer()])
@@ -101,8 +101,7 @@ def solve(Config):
                     summary_str = sess.run(summary)
                     writer.add_summary(summary_str, global_step=step)
                     writer.flush()
-		
-	    coord.request_stop()
+            coord.request_stop()
             coord.join(threads)
             sess.close()
 
