@@ -8,22 +8,21 @@ class Vgg(object):
 
 
     def get_conv_filter(self, name):
-        return tf.constant(self.data_dict[name][0], name='filter')
+        return tf.constant(self.data_dict[name][0])
 
     def get_bias(self, name):
-        return tf.constant(self.data_dict[name][1], name='biases')
+        return tf.constant(self.data_dict[name][1])
 
     def conv_layer(self, bottom, name):
-        with tf.variable_scope(name):
-            kernel = self.get_conv_filter(name)
-            conv = tf.nn.conv2d(bottom, kernel, [1, 1, 1, 1], padding='SAME')
-            bias = self.get_bias(name)
-            conv = tf.nn.bias_add(conv, bias)
-            return tf.nn.relu(conv)
+        kernel = self.get_conv_filter(name)
+        conv = tf.nn.conv2d(bottom, kernel, [1, 1, 1, 1], padding='SAME')
+        bias = self.get_bias(name)
+        conv = tf.nn.bias_add(conv, bias)
+        return tf.nn.relu(conv)
 
-    def max_pool(self, bottom, name):
+    def max_pool(self, bottom):
         return tf.nn.max_pool(bottom, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1],
-                              padding='SAME', name=name)
+                              padding='SAME')
 
     def build(self, images):
         """
@@ -39,21 +38,21 @@ class Vgg(object):
         # now do the net
         conv1_1 = self.conv_layer(bgr, 'conv1_1')
         conv1_2 = self.conv_layer(conv1_1, 'conv1_2')
-        pool1 = self.max_pool(conv1_2, 'pool1')
+        pool1 = self.max_pool(conv1_2)
 
         conv2_1 = self.conv_layer(pool1, 'conv2_1')
         conv2_2 = self.conv_layer(conv2_1, 'conv2_2')
-        pool2 = self.max_pool(conv2_2, 'pool2')
+        pool2 = self.max_pool(conv2_2)
 
         conv3_1 = self.conv_layer(pool2, 'conv3_1')
         conv3_2 = self.conv_layer(conv3_1, 'conv3_2')
         conv3_3 = self.conv_layer(conv3_2, 'conv3_3')
-        pool3 = self.max_pool(conv3_3, 'pool3')
+        pool3 = self.max_pool(conv3_3)
 
         conv4_1 = self.conv_layer(pool3, 'conv4_1')
         conv4_2 = self.conv_layer(conv4_1, 'conv4_2')
         conv4_3 = self.conv_layer(conv4_2, 'conv4_3')
-        pool4 = self.max_pool(conv4_3, 'pool4')
+        pool4 = self.max_pool(conv4_3)
 
         conv5_1 = self.conv_layer(pool4, 'conv5_1')
         conv5_2 = self.conv_layer(conv5_1, 'conv5_2')

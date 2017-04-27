@@ -21,7 +21,7 @@ tv_weight: 0.00001
 image_size: 256
 batch_size: 1
 mean: [123.68, 116.779, 103.939]
-lr: 0.01
+lr: 0.001
 max_iter: 40000
 display: 1
 snapshot: 10000
