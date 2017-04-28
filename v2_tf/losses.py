@@ -33,10 +33,10 @@ def get_style_feature(Config):
         style_net = Vgg(Config.feature_path)
         layer_infos = style_net.build(images)
         # get the feature we need
-    	style_features = []
+    	style_features = {}
         for layer in Config.style_layers:
             layer_info = layer_infos[layer]
-            style_features.append(gram(layer_info))
+            style_features[layer] = gram(layer_info)
         # get the feature with run
         config = tf.ConfigProto()
         config.gpu_options.allow_growth = True
@@ -67,11 +67,11 @@ def style_loss(layers, style_layers, style_features):
     :return:
     """
     loss = 0
-    for style_gram, layer in zip(style_features, style_layers):
+    for layer in style_layers:
         generated, _ = tf.split(value=layers[layer], num_or_size_splits=2, axis=0)
         size = tf.size(generated)
-        for style_im in style_gram:
-            loss += tf.nn.l2_loss(tf.reduce_sum(gram(generated) - style_im, 0)) / tf.to_float(size)
+        style_im = style_features[layer]
+        loss += tf.nn.l2_loss(tf.reduce_sum(gram(generated) - style_im, 0)) / tf.to_float(size)
     return loss
 
 

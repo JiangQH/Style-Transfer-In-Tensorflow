@@ -1,10 +1,13 @@
 import tensorflow as tf
 import numpy as np
+import scipy.io
 class Vgg(object):
 
     def __init__(self, model_path):
         # load the numpy weights
         self.data_dict = np.load(model_path, encoding='latin1').item()
+
+
 
 
     def get_conv_filter(self, name):

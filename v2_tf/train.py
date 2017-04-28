@@ -60,7 +60,9 @@ def solve(Config):
         writer = tf.summary.FileWriter(summary_path)
 
             # the saver loader
-        saver = tf.train.Saver(tf.all_variables())
+        saver = tf.train.Saver(tf.global_variables())
+        for var in tf.global_variables():
+            print var
         restore = tf.train.latest_checkpoint(model_dir)
 
 
