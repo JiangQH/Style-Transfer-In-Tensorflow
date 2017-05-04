@@ -25,7 +25,6 @@ You can see the code in optimize for more detail. Note since it has to optimize,
 Actually the optimization can be replaced by training a feedforward CNNs. Doing this when deploy, we can achieve real time style-transfer. Ideas from the following papers:    
 
 [Perceptual Losses for Real-Time Style Transfer and Super-Resolution](https://arxiv.org/abs/1603.08155)   
-
 [Instance Normalization: The Missing Ingredient for Fast Stylization](https://arxiv.org/abs/1607.08022)  
 
 And when doing this project, I find caffe's way to add new layer can be really complicated and not friendly to python interface. So I change the platform to tensorflow. 
@@ -36,15 +35,12 @@ It will be release soon with video transfered result.
 ## How to
 **requirements**   
 [tensorflow](https://www.tensorflow.org/)  
-
 [scipy&numpy](https://www.scipy.org/)  
 
 **Train from scratch**  
 Before you train the network, some extra requirements are needed  
 [COCO dataset](http://msvocds.blob.core.windows.net/coco2014/train2014.zip), release it in a content folder  
-
 [pre-trained vgg16 model](), note this model has been converted to be loaded with numpy interface  
-
 [pyyaml](http://pyyaml.org/), this is needed to parse the config file  
 
 Now you can train your own style network, change the contents in conf.yml with guidance in it, everything is done. 
