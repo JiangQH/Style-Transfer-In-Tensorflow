@@ -34,12 +34,12 @@ And when doing this project, I find caffe's way to add new layer can be really c
 It will be release soon with video transfered result.
 
 ## How to
-**requirements**
+**requirements**   
 [tensorflow](https://www.tensorflow.org/)  
 
 [scipy&numpy](https://www.scipy.org/)  
 
-**Train from scratch**
+**Train from scratch**  
 Before you train the network, some extra requirements are needed  
 [COCO dataset](http://msvocds.blob.core.windows.net/coco2014/train2014.zip), release it in a content folder  
 
@@ -51,7 +51,7 @@ Now you can train your own style network, change the contents in conf.yml with g
 
 ``python train.py -c conf.yml`` 
 
-**Deploy a trained model**
+**Deploy a trained model**  
 Use the fast_generate script as follows: 
 
 ``python fast_generate.py -m <path to the trained model dir> -i <folders contain image want to transfer> -o <output dir>``  
