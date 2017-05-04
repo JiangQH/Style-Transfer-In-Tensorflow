@@ -1,11 +1,11 @@
 import tensorflow as tf
 import os.path as osp
 import os
-import losses
-import model
-from dataset import Dataset
-from vgg import Vgg
-from util import preprocess, load_config
+from src.fast import losses
+from src.fast import model
+from src.fast.dataset import Dataset
+from src.fast.vgg import Vgg
+from src.fast.util import preprocess, load_config
 import numpy as np
 import argparse
 import gc
@@ -36,7 +36,6 @@ def solve(Config):
         style_loss = losses.style_loss(layer_infos, Config.style_layers, style_features)
         tv_loss = losses.tv_loss(generated)
         loss = Config.style_weight * style_loss + Config.content_weight * content_loss + Config.tv_weight * tv_loss
-        gc.collect()
         # train op
         global_step = tf.Variable(0, name='global_step', trainable=False)
         train_op = tf.train.AdamOptimizer(Config.lr).minimize(loss, global_step=global_step)
