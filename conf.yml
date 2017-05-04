@@ -1,8 +1,8 @@
-## config for the style and content image
-style_image: ../style/candy.jpg # the style image we want to train
-data_dir: ../content # the content image folders
-model_dir: ../models # dirs to save the model
-feature_path: ../vgg/vgg16.npy # the pre-trained vgg16 model
+## config for the style and content image, change the following 4 line
+style_image: ./eval/candy.jpg # the style image we want to train
+data_dir: ./content_images # the content image folders, where the coco dataset released to
+model_dir: ./models # dirs to save the model
+feature_path: ./vgg/vgg16.npy # the pre-trained vgg16 model
 
 
 ## below can be fixed if you do not know how to change them

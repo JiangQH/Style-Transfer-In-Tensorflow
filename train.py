@@ -60,8 +60,8 @@ def solve(Config):
 
             # the saver loader
         saver = tf.train.Saver(tf.global_variables())
-        for var in tf.global_variables():
-            print var
+        #for var in tf.global_variables():
+        #    print var
         restore = tf.train.latest_checkpoint(model_dir)
 
 
@@ -83,14 +83,14 @@ def solve(Config):
                 # pop the data queue
             coord = tf.train.Coordinator()
             threads = tf.train.start_queue_runners(sess=sess, coord=coord)
-            for step in xrange(Config.max_iter):
+            for step in xrange(Config.max_iter+1):
                 _, loss_value = sess.run([train_op, loss])
                     #plt.imshow(np.uint8(gen[0,...]))
-                if step % Config.display == 0:
+                if step % Config.display == 0 or step == Config.max_iter:
                     print "{}[iterations], train loss {}".format(step,
                                                                                                  loss_value)
                 assert not np.isnan(loss_value), 'model with loss nan'
-                if step % Config.snapshot == 0:
+                if step != 0 and (step % Config.snapshot == 0 or step == Config.max_iter):
                         # save the generated to see
                     print 'adding summary and saving snapshot...'
                     saver.save(sess, osp.join(model_dir, 'model.ckpt'), global_step=step)
