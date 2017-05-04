@@ -1,4 +1,4 @@
-from src.optimize import StyleTransfer
+from neural_style.optimize import StyleTransfer
 import argparse
 import os.path as osp
 import scipy.misc
