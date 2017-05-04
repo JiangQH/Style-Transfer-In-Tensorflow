@@ -3,7 +3,7 @@ import argparse
 import os.path as osp
 import scipy.misc
 
-parser = argparse.ArgumentParser(usage='python main.py -c [pathto/content_img] -s [pathto/style_img]')
+parser = argparse.ArgumentParser(usage='python optimize.py -c [pathto/content_img] -s [pathto/style_img]')
 parser.add_argument('-c', '--content_img', type=str, required=True, help='the content img to transfer')
 parser.add_argument('-s', '--style_img', type=str, required=True, help='the style img to transfer from')
 parser.add_argument('-m', '--model_name', type=str, required=False, default='vgg16', help='the model to use')
