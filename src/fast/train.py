@@ -1,14 +1,15 @@
 import tensorflow as tf
 import os.path as osp
 import os
-from src.fast import losses
-from src.fast import model
-from src.fast.dataset import Dataset
-from src.fast.vgg import Vgg
-from src.fast.util import preprocess, load_config
+import losses
+import model
+from dataset import Dataset
+from vgg import Vgg
+from util import preprocess, load_config
 import numpy as np
 import argparse
 import gc
+import time
 
 
 def solve(Config):
@@ -83,12 +84,15 @@ def solve(Config):
                 # pop the data queue
             coord = tf.train.Coordinator()
             threads = tf.train.start_queue_runners(sess=sess, coord=coord)
+    	    print 'begin training'
+ 	    start_time = time.time()
+	    local_time = time.time()
             for step in xrange(Config.max_iter+1):
                 _, loss_value = sess.run([train_op, loss])
                     #plt.imshow(np.uint8(gen[0,...]))
                 if step % Config.display == 0 or step == Config.max_iter:
-                    print "{}[iterations], train loss {}".format(step,
-                                                                                                 loss_value)
+                    print "{}[iterations], train loss {}, time consumes {}s".format(step,loss_value, time.time() - local_time)
+		    local_time = time.time()
                 assert not np.isnan(loss_value), 'model with loss nan'
                 if step != 0 and (step % Config.snapshot == 0 or step == Config.max_iter):
                         # save the generated to see
@@ -101,11 +105,10 @@ def solve(Config):
             coord.join(threads)
             sess.close()
 
-            print 'done'
+            print 'done, consumes time {}s'.format(time.time() - start_time)
 
 
 def main(args):
-    print 'begin training'
     paser = argparse.ArgumentParser()
     paser.add_argument('-c', '--conf', help='path to the config file')
     args = paser.parse_args()

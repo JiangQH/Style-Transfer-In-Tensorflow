@@ -4,7 +4,7 @@ import numpy as np
 import scipy.misc
 from numeric import Numeric
 from scipy.fftpack import ifftn
-model_dir = './model'
+
 VGG16_CONTENTS = {"conv4_2": 1}
 VGG16_STYLES = {"conv1_1": 0.2,
                 "conv2_1": 0.2,
@@ -14,19 +14,19 @@ VGG16_STYLES = {"conv1_1": 0.2,
 VGG16_LAYERS=['conv1_1', 'conv2_1', 'conv3_1', 'conv4_1', 'conv4_2', 'conv5_1']
 
 class SimpleTools(object):
-    def __init__(self, model_name, content_img, style_img, device_id, init='content',
+    def __init__(self, model_dirs, content_img, style_img, device_id, init='content',
                  ratio=1e4):
-        self._loadModel(model_name, device_id)
+        self._loadModel(model_dirs, device_id)
         self._prepareFGAndInitInput(content_img, style_img, init)
         self.ratio = ratio
         self.content_img = content_img
         self.style_img = style_img
 
-    def _loadModel(self, model_name, id):
-        print 'loading model...{}'.format(model_name)
-        model_file = osp.join(model_dir, model_name+'.prototxt')
-        model_weights = osp.join(model_dir, model_name+'.caffemodel')
-        mean_file = osp.join(model_dir, model_name+'.npy')
+    def _loadModel(self, model_dirs, id):
+        print 'loading model...from{}'.format(model_dirs)
+        model_file = osp.join(model_dirs, 'vgg16.prototxt')
+        model_weights = osp.join(model_dirs, 'vgg16.caffemodel')
+        mean_file = osp.join(model_dirs, 'vgg16_mean.npy')
         if id == -1:
             caffe.set_mode_cpu()
         else:
@@ -40,10 +40,9 @@ class SimpleTools(object):
         #transformer.set_raw_scale('data', 255)
         self.net = net
         self.transformer = transformer
-        if model_name == 'vgg16':
-            self.style_layers = VGG16_STYLES
-            self.content_layers = VGG16_CONTENTS
-            self.layers = VGG16_LAYERS
+        self.style_layers = VGG16_STYLES
+        self.content_layers = VGG16_CONTENTS
+        self.layers = VGG16_LAYERS
         print 'model loading done'
 
 
@@ -115,7 +114,7 @@ class SimpleTools(object):
         return self.data_bounds
 
     def saveImg(self, img_data):
-        output_path = './result'
+        output_path = './'
         content_name = osp.splitext(osp.basename(self.content_img))[0]
         style_name = osp.splitext(osp.basename(self.style_img))[0]
         save_name = osp.join(output_path, content_name + '_to_' + style_name + '.png')
@@ -123,5 +122,5 @@ class SimpleTools(object):
         img = self.transformer.deprocess('data', img_data)
         img = scipy.misc.imresize(img, (self.ori_width, self.ori_height))
         scipy.misc.imsave(save_name, img)
-        print 'done! saved as save_name'
+        print 'done! saved as save_name {}'.format(save_name)
 

@@ -5,11 +5,11 @@ import os.path as osp
 import scipy.misc
 
 class StyleTransfer(object):
-	def __init__(self, content_img, style_img, model_name, device_id,
+	def __init__(self, content_img, style_img, model_dirs, device_id,
 				 init='content', max_iter=500, verbose=True):
 		self.content_img = content_img
 		self.style_img = style_img
-		self.model_name = model_name
+		self.model_dirs = model_dirs
 		self.device_id = device_id
 		self.init = init
 		self.max_iter = max_iter
@@ -20,7 +20,7 @@ class StyleTransfer(object):
 		Do the transfer job
 		:return:
 		"""
-		self.tool = ST(self.model_name, self.content_img, self.style_img, self.device_id)
+		self.tool = ST(self.model_dirs, self.content_img, self.style_img, self.device_id)
 		self.optimizer = Numeric()
 		# construct the optimize param
 		method = 'L-BFGS-B'
