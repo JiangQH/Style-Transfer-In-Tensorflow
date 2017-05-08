@@ -2,7 +2,7 @@
 This repo contains two copies of code, both do the style transfer job. Using the code you can transfer styles from any image to another.      
 
 <p align = 'center'>
-<img src = 'examples/content/5.jpg' height = '246px'>
+<img src = 'examples/content/flower.jpg' height = '246px'>
 <img src = 'examples/style/flower.jpg' height = '246px'>
 <img src = 'examples/styled/optimize/flower.png' width = '627px'>
 </p>
@@ -52,7 +52,7 @@ Here we show the results of both two methods. Note here that the image to transf
 Here only the Fast Style Transfer be deployed to the video style transfer, optimized way consumes too much time which is not feasible.     
 <div align = 'center'>
      <a href = 'https://youtu.be/-aJYsQ2Bt60'>
-        <img src = 'examples/styled/fast/la_wave.gif' alt = 'Stylized Video, click to watch on youtube' width = '800px' height = '400px'>
+        <img src = 'examples/styled/fast/la_wave.gif' alt = 'Stylized Video, click to watch on youtube' width = '400px' height = '800px'>
      </a>
 </div>
 

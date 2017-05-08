@@ -4,8 +4,6 @@ __pycache__/
 *$py.class
 *caffemodel
 .idea/
-*content/
-*style/
 *models/
 *vgg/
 *eval/
