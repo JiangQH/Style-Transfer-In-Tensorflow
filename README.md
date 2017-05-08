@@ -17,38 +17,38 @@ Here we show the results of both two methods. Note here that the image to transf
 **The optimized way**      
 <div align = 'center'>
 <img src = 'examples/style/candy.jpg' height = '200px' width="200px">
-<img src = 'examples/content/chicago.jpg' height = '200px' width="350px">
-<img src = 'examples/styled/optimize/chicago_to_candy.png' height = '200px' width="350px">
+<img src = 'examples/content/chicago.jpg' height = '200px' width="280px">
+<img src = 'examples/styled/optimize/chicago_to_candy.png' height = '200px' width="280px">
 <br>
 <img src = 'examples/style/starry.jpg' height = '200px' width="200px">
-<img src = 'examples/content/chicago.jpg' height = '200px' width="350px">
-<img src = 'examples/styled/optimize/chicago_to_starry.png' height = '200px' width="350px">
+<img src = 'examples/content/chicago.jpg' height = '200px' width="280px">
+<img src = 'examples/styled/optimize/chicago_to_starry.png' height = '200px' width="280px">
 <br>
 <img src = 'examples/style/starry.jpg' height = '200px' width="200px">
-<img src = 'examples/content/nanjing.jpg' height = '200px' width="350px">
-<img src = 'examples/styled/optimize/nanjing_to_starry.png' height = '200px' width="350px">
+<img src = 'examples/content/nanjing.jpg' height = '200px' width="280px">
+<img src = 'examples/styled/optimize/nanjing_to_starry.png' height = '200px' width="280px">
 <br>
 <img src = 'examples/style/flower.jpg' height = '200px' width="200px">
-<img src = 'examples/content/flower.jpg' height = '200px' width="350px">
-<img src = 'examples/styled/optimize/flower.png' height = '200px' width="350px">
+<img src = 'examples/content/flower.jpg' height = '200px' width="280px">
+<img src = 'examples/styled/optimize/flower.png' height = '200px' width="280px">
 
 </div>
 
 **The Fast Style Transfer way**       
 <div align = 'center'>
 <img src = 'examples/style/wave.jpg' height = '200px' width="200px">
-<img src = 'examples/content/chicago.jpg' height = '200px' width="350px">
-<img src = 'examples/styled/fast/chicago_wave.jpg' height = '200px' width="350px">
+<img src = 'examples/content/chicago.jpg' height = '200px' width="280px">
+<img src = 'examples/styled/fast/chicago_wave.jpg' height = '200px' width="280px">
 
 <br>
 <img src = 'examples/style/wave.jpg' height = '200px' width="200px">
-<img src = 'examples/content/nanjing.jpg' height = '200px' width="350px">
-<img src = 'examples/styled/fast/nanjing_wave.jpg' height = '200px' width="350px">
+<img src = 'examples/content/nanjing.jpg' height = '200px' width="280px">
+<img src = 'examples/styled/fast/nanjing_wave.jpg' height = '200px' width="280px">
 
 <br>
 <img src = 'examples/style/wave.jpg' height = '200px' width="200px">
-<img src = 'examples/content/flower.jpg' height = '200px' width="350px">
-<img src = 'examples/styled/fast/flower_wave.jpg' height = '200px' width="350px">
+<img src = 'examples/content/flower.jpg' height = '200px' width="280px">
+<img src = 'examples/styled/fast/flower_wave.jpg' height = '200px' width="px">
 </div>   
 
 # Video Stylization      
