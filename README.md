@@ -31,6 +31,7 @@ Here we show the results of both two methods. Note here that the image to transf
 <img src = 'examples/style/flower.jpg' height = '200px'>
 <img src = 'examples/content/flower.jpg' height = '200px'>
 <img src = 'examples/styled/optimize/flower.png' height = '200px'>
+<br>
 </div>
 
 **The Fast Style Transfer way**       
@@ -46,6 +47,7 @@ Here we show the results of both two methods. Note here that the image to transf
 <a href = 'examples/style/wave.jpg'><img src = 'examples/style/wave.jpg' height = '200px' width="200px"></a>
 <img src = 'examples/content/flower.jpg' height = '200px'>
 <img src = 'examples/styled/fast/flower_wave.jpg' height = '200px'>
+<br>
 </div>   
 
 # Video Stylization      
