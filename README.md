@@ -47,13 +47,12 @@ Here we show the results of both two methods. Note here that the image to transf
 </div>   
 
 # Video Stylization      
-Here only the Fast Style Transfer be deployed to the video style transfer, optimized way consumes too much time which is not feasible.     
+Here only the Fast Style Transfer be deployed to the video style transfer, optimized way consumes too much time which is not feasible. Refere to [Youtube](https://youtu.be/-aJYsQ2Bt60) to watch the whole video.     
 <div align = 'center'>
      <a href = 'https://youtu.be/-aJYsQ2Bt60'>
         <img src = 'examples/styled/fast/la_wave.gif' alt = 'Stylized Video, click to watch on youtube' width = '600px' height = '680px'>
      </a>
-</div>  
-Refere to [Youtube](https://arxiv.org/abs/1508.06576) to watch the whole video.  
+</div>    
 
 #  Documentation   
 All two works are done with python2.7, make sure you have it installed.   
