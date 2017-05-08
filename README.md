@@ -53,7 +53,7 @@ Here only the Fast Style Transfer be deployed to the video style transfer, optim
         <img src = 'examples/styled/fast/la_wave.gif' alt = 'Stylized Video, click to watch on youtube' width = '600px' height = '680px'>
      </a>
 </div>  
-Refere to [Google](https://youtu.be/-aJYsQ2Bt60)  to what the whole video.  
+Refere to [Youtube](https://arxiv.org/abs/1508.06576) to watch the whole video.  
 
 #  Documentation   
 All two works are done with python2.7, make sure you have it installed.   
