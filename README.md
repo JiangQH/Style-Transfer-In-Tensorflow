@@ -16,38 +16,39 @@ Here we show the results of both two methods. Note here that the image to transf
 
 **The optimized way**      
 <div align = 'center'>
-<img src = 'examples/style/candy.jpg' height = '200px'>
-<img src = 'examples/content/chicago.jpg' height = '200px'>
-<img src = 'examples/styled/optimize/chicago_to_candy.png' height = '200px'>
+<img src = 'examples/style/candy.jpg' height = '200px' width="200px">
+<img src = 'examples/content/chicago.jpg' height = '200px' width="350px">
+<img src = 'examples/styled/optimize/chicago_to_candy.png' height = '200px' width="350px">
 <br>
-<img src = 'examples/style/starry.jpg' height = '200px'>
-<img src = 'examples/content/chicago.jpg' height = '200px'>
-<img src = 'examples/styled/optimize/chicago_to_starry.png' height = '200px'>
+<img src = 'examples/style/starry.jpg' height = '200px' width="200px">
+<img src = 'examples/content/chicago.jpg' height = '200px' width="350px">
+<img src = 'examples/styled/optimize/chicago_to_starry.png' height = '200px' width="350px">
 <br>
-<a href = 'examples/style/starry.jpg'><img src = 'examples/style/starry.jpg' height = '200px'></a>
-<img src = 'examples/content/nanjing.jpg' height = '200px'>
-<img src = 'examples/styled/optimize/nanjing_to_starry.png' height = '200px'>
+<img src = 'examples/style/starry.jpg' height = '200px' width="200px">
+<img src = 'examples/content/nanjing.jpg' height = '200px' width="350px">
+<img src = 'examples/styled/optimize/nanjing_to_starry.png' height = '200px' width="350px">
 <br>
-<img src = 'examples/style/flower.jpg' height = '200px'>
-<img src = 'examples/content/flower.jpg' height = '200px'>
-<img src = 'examples/styled/optimize/flower.png' height = '200px'>
-<br>
+<img src = 'examples/style/flower.jpg' height = '200px' width="200px">
+<img src = 'examples/content/flower.jpg' height = '200px' width="350px">
+<img src = 'examples/styled/optimize/flower.png' height = '200px' width="350px">
+
 </div>
 
 **The Fast Style Transfer way**       
 <div align = 'center'>
-<a href = 'examples/style/wave.jpg'><img src = 'examples/style/wave.jpg' height = '200px' width="200px"></a>
-<img src = 'examples/content/chicago.jpg' height = '200px'>
-<img src = 'examples/styled/fast/chicago_wave.jpg' height = '200px'>
+<img src = 'examples/style/wave.jpg' height = '200px' width="200px">
+<img src = 'examples/content/chicago.jpg' height = '200px' width="350px">
+<img src = 'examples/styled/fast/chicago_wave.jpg' height = '200px' width="350px">
+
 <br>
-<a href = 'examples/style/wave.jpg'><img src = 'examples/style/wave.jpg' height = '200px' width="200px"></a>
-<img src = 'examples/content/nanjing.jpg' height = '200px'>
-<img src = 'examples/styled/fast/nanjing_wave.jpg' height = '200px'>
+<img src = 'examples/style/wave.jpg' height = '200px' width="200px">
+<img src = 'examples/content/nanjing.jpg' height = '200px' width="350px">
+<img src = 'examples/styled/fast/nanjing_wave.jpg' height = '200px' width="350px">
+
 <br>
-<a href = 'examples/style/wave.jpg'><img src = 'examples/style/wave.jpg' height = '200px' width="200px"></a>
-<img src = 'examples/content/flower.jpg' height = '200px'>
-<img src = 'examples/styled/fast/flower_wave.jpg' height = '200px'>
-<br>
+<img src = 'examples/style/wave.jpg' height = '200px' width="200px">
+<img src = 'examples/content/flower.jpg' height = '200px' width="350px">
+<img src = 'examples/styled/fast/flower_wave.jpg' height = '200px' width="350px">
 </div>   
 
 # Video Stylization      
@@ -56,7 +57,8 @@ Here only the Fast Style Transfer be deployed to the video style transfer, optim
      <a href = 'https://youtu.be/-aJYsQ2Bt60'>
         <img src = 'examples/styled/fast/la_wave.gif' alt = 'Stylized Video, click to watch on youtube' width = '600px' height = '680px'>
      </a>
-</div>
+</div>  
+Refere to [Youtube](https://youtu.be/-aJYsQ2Bt60) to what the whole video.  
 
 #  Documentation   
 All two works are done with python2.7, make sure you have it installed.   
