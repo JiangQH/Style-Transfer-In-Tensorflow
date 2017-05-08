@@ -4,7 +4,7 @@ This repo contains two copies of code, both do the style transfer job. Using the
 <p align = 'center'>
 <img src = 'examples/content/flower.jpg' height = '246px'>
 <img src = 'examples/style/flower.jpg' height = '246px'>
-<img src = 'examples/styled/optimize/flower.png' width = '246px'>
+<img src = 'examples/styled/optimize/flower.png' height = '246px'>
 </p>
 
 **The optimized method**, based on [A Neural Algorithm of Artistic Style](https://arxiv.org/abs/1508.06576). It is an optimized way of doing style transfer and it may take several minutes to complete the transfer job. But no pre-trained model is needed, so you can transfer style from any image as you like without the training procedure. If you want to transfer a style without training and can bear the time to deploy, try this method. Refer to the document for more detail.      
@@ -16,11 +16,11 @@ Here we show the results of both two methods. Note here that the image to transf
 
 **The optimized way**      
 <div align = 'center'>
-<a href = 'examples/style/candy.jpg'><img src = 'examples/style/candy.jpg' height = '200px'></a>
+<img src = 'examples/style/candy.jpg' height = '200px'>
 <img src = 'examples/content/chicago.jpg' height = '200px'>
 <img src = 'examples/styled/optimize/chicago_to_candy.png' height = '200px'>
 <br>
-<a href = 'examples/style/starry.jpg'><img src = 'examples/style/starry.jpg' height = '200px'></a>
+<img src = 'examples/style/starry.jpg' height = '200px'>
 <img src = 'examples/content/chicago.jpg' height = '200px'>
 <img src = 'examples/styled/optimize/chicago_to_starry.png' height = '200px'>
 <br>
@@ -28,22 +28,22 @@ Here we show the results of both two methods. Note here that the image to transf
 <img src = 'examples/content/nanjing.jpg' height = '200px'>
 <img src = 'examples/styled/optimize/nanjing_to_starry.png' height = '200px'>
 <br>
-<a href = 'examples/style/flower.jpg'><img src = 'examples/style/flower.jpg' height = '200px'></a>
+<img src = 'examples/style/flower.jpg' height = '200px'>
 <img src = 'examples/content/flower.jpg' height = '200px'>
 <img src = 'examples/styled/optimize/flower.png' height = '200px'>
 </div>
 
 **The Fast Style Transfer way**       
 <div align = 'center'>
-<a href = 'examples/style/wave.jpg'><img src = 'examples/style/wave.jpg' height = '200px'></a>
+<a href = 'examples/style/wave.jpg'><img src = 'examples/style/wave.jpg' height = '200px' width="200px"></a>
 <img src = 'examples/content/chicago.jpg' height = '200px'>
 <img src = 'examples/styled/fast/chicago_wave.jpg' height = '200px'>
 <br>
-<a href = 'examples/style/wave.jpg'><img src = 'examples/style/wave.jpg' height = '200px'></a>
+<a href = 'examples/style/wave.jpg'><img src = 'examples/style/wave.jpg' height = '200px' width="200px"></a>
 <img src = 'examples/content/nanjing.jpg' height = '200px'>
 <img src = 'examples/styled/fast/nanjing_wave.jpg' height = '200px'>
 <br>
-<a href = 'examples/style/wave.jpg'><img src = 'examples/style/wave.jpg' height = '200px'></a>
+<a href = 'examples/style/wave.jpg'><img src = 'examples/style/wave.jpg' height = '200px' width="200px"></a>
 <img src = 'examples/content/flower.jpg' height = '200px'>
 <img src = 'examples/styled/fast/flower_wave.jpg' height = '200px'>
 </div>   
