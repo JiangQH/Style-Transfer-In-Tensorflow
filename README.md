@@ -37,22 +37,22 @@ Here we show the results of both two methods. Note here that the image to transf
 <div align = 'center'>
 <a href = 'examples/style/wave.jpg'><img src = 'examples/style/wave.jpg' height = '200px'></a>
 <img src = 'examples/content/chicago.jpg' height = '200px'>
-<img src = 'examples/styled/optimize/chicago_wave.png' height = '200px'>
+<img src = 'examples/styled/fast/chicago_wave.png' height = '200px'>
 <br>
 <a href = 'examples/style/wave.jpg'><img src = 'examples/style/wave.jpg' height = '200px'></a>
 <img src = 'examples/content/nanjing.jpg' height = '200px'>
-<img src = 'examples/styled/optimize/nanjing_wave.png' height = '200px'>
+<img src = 'examples/styled/fast/nanjing_wave.png' height = '200px'>
 <br>
 <a href = 'examples/style/wave.jpg'><img src = 'examples/style/wave.jpg' height = '200px'></a>
 <img src = 'examples/content/flower.jpg' height = '200px'>
-<img src = 'examples/styled/flower_wave.png' height = '200px'>
+<img src = 'examples/styled/fast/flower_wave.png' height = '200px'>
 </div>   
 
 # Video Stylization      
 Here only the Fast Style Transfer be deployed to the video style transfer, optimized way consumes too much time which is not feasible.     
 <div align = 'center'>
      <a href = 'https://youtu.be/-aJYsQ2Bt60'>
-        <img src = 'examples/styled/fast/la_wave.gif' alt = 'Stylized Video, click to watch on youtube' width = '400px' height = '800px'>
+        <img src = 'examples/styled/fast/la_wave.gif' alt = 'Stylized Video, click to watch on youtube' width = '600px' height = '680px'>
      </a>
 </div>
 
