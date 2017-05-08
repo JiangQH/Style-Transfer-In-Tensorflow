@@ -27,11 +27,6 @@ Here we show the results of both two methods. Note here that the image to transf
 <img src = 'examples/style/starry.jpg' height = '200px' width="200px">
 <img src = 'examples/content/nanjing.jpg' height = '200px' width="280px">
 <img src = 'examples/styled/optimize/nanjing_to_starry.png' height = '200px' width="280px">
-<br>
-<img src = 'examples/style/flower.jpg' height = '200px' width="200px">
-<img src = 'examples/content/flower.jpg' height = '200px' width="280px">
-<img src = 'examples/styled/optimize/flower.png' height = '200px' width="280px">
-
 </div>
 
 **The Fast Style Transfer way**       
@@ -48,7 +43,7 @@ Here we show the results of both two methods. Note here that the image to transf
 <br>
 <img src = 'examples/style/wave.jpg' height = '200px' width="200px">
 <img src = 'examples/content/flower.jpg' height = '200px' width="280px">
-<img src = 'examples/styled/fast/flower_wave.jpg' height = '200px' width="px">
+<img src = 'examples/styled/fast/flower_wave.jpg' height = '200px' width="280px">
 </div>   
 
 # Video Stylization      
@@ -58,7 +53,7 @@ Here only the Fast Style Transfer be deployed to the video style transfer, optim
         <img src = 'examples/styled/fast/la_wave.gif' alt = 'Stylized Video, click to watch on youtube' width = '600px' height = '680px'>
      </a>
 </div>  
-Refere to [Youtube](https://youtu.be/-aJYsQ2Bt60) to what the whole video.  
+Refere to [Google](https://youtu.be/-aJYsQ2Bt60)  to what the whole video.  
 
 #  Documentation   
 All two works are done with python2.7, make sure you have it installed.   
