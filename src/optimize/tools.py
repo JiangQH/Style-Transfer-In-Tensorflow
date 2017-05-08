@@ -5,13 +5,13 @@ import scipy.misc
 from numeric import Numeric
 from scipy.fftpack import ifftn
 
-VGG16_CONTENTS = {"conv4_2": 1}
+VGG16_CONTENTS = {"conv2_2": 1}
 VGG16_STYLES = {"conv1_1": 0.2,
                 "conv2_1": 0.2,
                 "conv3_1": 0.2,
                 "conv4_1": 0.2,
                 "conv5_1": 0.2}
-VGG16_LAYERS=['conv1_1', 'conv2_1', 'conv3_1', 'conv4_1', 'conv4_2', 'conv5_1']
+VGG16_LAYERS=['conv1_1', 'conv2_1', 'conv2_2', 'conv3_1', 'conv4_1', 'conv5_1']
 
 class SimpleTools(object):
     def __init__(self, model_dirs, content_img, style_img, device_id, init='content',

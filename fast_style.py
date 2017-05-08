@@ -10,7 +10,7 @@ import argparse
 MEAN = [123.68, 116.779, 103.939]
 parser = argparse.ArgumentParser(usage='python fast_style.py -m [path/to/modeldirs] -i [path/to/inputdirs] -o [path/to/outdirs] ')
 parser.add_argument('-m', '--model_dir', type=str, required=True, help='path to the model dir')
-parser.add_argument('-i', '--input', type=str, required=True, help='path to the images to transfer')
+parser.add_argument('-i', '--input', type=str, required=True, help='path to the image to transfer')
 parser.add_argument('-o', '--output', type=str, required=True, help='path to save the styled images')
 parser.add_argument('-b', '--batch_size', type=int, required=False, default=4, help='batch size to generate')
 parser.add_argument('-d', '--device', type=str, required=False, default='/gpu:0', help='the device to run model')
@@ -82,11 +82,17 @@ def main():
 
 	input_dir = args.input
 	out_dir = args.output
-	base_names = os.listdir(input_dir)
-	assert len(base_names) > 0, 'no imgs in the input dir'
-	in_imgs = [osp.join(input_dir, name) for name in base_names]
-	out_imgs = [osp.join(out_dir, name) for name in base_names]
-	predict(in_imgs, out_imgs, check_dir, batch_size, device)
+	if osp.isdir(input_dir):
+		base_names = os.listdir(input_dir)
+		assert len(base_names) > 0, 'no imgs in the input dir'
+		in_imgs = [osp.join(input_dir, name) for name in base_names]
+		out_imgs = [osp.join(out_dir, name) for name in base_names]
+		predict(in_imgs, out_imgs, check_dir, batch_size, device)
+	else:
+		in_imgs = input_dir
+		path, base_name = osp.split(input_dir)
+		out_imgs = osp.join(out_dir, in_imgs)
+		predict(in_imgs, out_imgs, check_dir, batch_size, device)
 
 
 

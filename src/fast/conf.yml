@@ -1,7 +1,7 @@
 ## config for the style and content image
-style_image: ../../eval/style/starry.jpg # the style image we want to train
+style_image: ../../eval/style/candy.jpg # the style image we want to train
 data_dir: ../../content # the content image folders
-model_dir: ../../starry_models # dirs to save the model
+model_dir: ../../candy_models # dirs to save the model
 feature_path: ../../vgg/vgg16.npy # the pre-trained vgg16 model
 
 
@@ -14,7 +14,7 @@ style_layers:
   - "conv2_2"
   - "conv3_3"
   - "conv4_3"
-style_weight: 220.0
+style_weight: 200.0
 content_weight: 1.0
 tv_weight: 0
 
